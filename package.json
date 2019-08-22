@@ -5,8 +5,8 @@
     "main": "index.js",
     "scripts": {
         "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
-        "build": "tsc",
         "tsc": "tsc",
+        "build": "tsc",
         "dev": "ts-node-dev --respawn --transpileOnly ./app.ts",
         "prod": "tsc && node ./build/app.js",
         "start": "node ./build/app.js"
