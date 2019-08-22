@@ -1,5 +1,3 @@
-import { response } from 'express';
-
 const request = require('request');
 const JustWatch = require('justwatch-api');
 
