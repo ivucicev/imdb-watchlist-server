@@ -7,24 +7,30 @@ export const scrapeWatchlist = async (req: any, response: any) => {
             req.query.userId +
             '/watchlist?view=detail',
         async (err: any, res: any, text: any) => {
-            const initialStateRegex = /IMDbReactInitialState\.push\((\{.+\})\);/g;
-            const matches: any = initialStateRegex.exec(text);
-            const initialStateText = matches[1];
-            const watchlistData = JSON.parse(initialStateText);
-            const movieIds = watchlistData.list.items.map((i: any) => i.const);
-            request(
-                {
-                    url: `http://www.imdb.com/title/data?ids=${movieIds.join(
-                        ','
-                    )}`,
-                    headers: {
-                        'Accept-Language': 'en'
+            try {
+                const initialStateRegex = /IMDbReactInitialState\.push\((\{.+\})\);/g;
+                const matches: any = initialStateRegex.exec(text);
+                const initialStateText = matches[1];
+                const watchlistData = JSON.parse(initialStateText);
+                const movieIds = watchlistData.list.items.map(
+                    (i: any) => i.const
+                );
+                request(
+                    {
+                        url: `http://www.imdb.com/title/data?ids=${movieIds.join(
+                            ','
+                        )}`,
+                        headers: {
+                            'Accept-Language': 'en'
+                        }
+                    },
+                    async (err: any, res: any, json: any) => {
+                        response.json(JSON.parse(json));
                     }
-                },
-                async (err: any, res: any, json: any) => {
-                    response.json(JSON.parse(json));
-                }
-            );
+                );
+            } catch (err) {
+                response.status(400).send('Error');
+            }
         }
     );
 };
